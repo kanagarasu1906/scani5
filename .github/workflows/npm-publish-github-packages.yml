@@ -23,7 +23,7 @@ jobs:
   codeql:
     name: CodeQL Scan
     runs-on: ubuntu-latest
-    needs: secret-scan
+    #needs: secret-scan
     permissions:
       actions: read
       contents: read
@@ -44,7 +44,7 @@ jobs:
   sonarqube:
     name: SonarCloud Scan
     runs-on: ubuntu-latest
-    needs: codeql
+    #needs: codeql
 
     steps:
       - name: Checkout code
@@ -76,7 +76,7 @@ jobs:
   trivy:
     name: Trivy Scan
     runs-on: ubuntu-latest
-    needs: sonarqube
+    #needs: sonarqube
 
     steps:
       - name: Trivy scan - Filesystem
