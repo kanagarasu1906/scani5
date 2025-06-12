@@ -36,7 +36,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript,react,nodejs  # Modify as per your codebase
+          languages: javascript  # Modify as per your codebase
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
