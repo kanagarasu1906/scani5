@@ -16,8 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
 
   codeql:
     name: CodeQL Scan
