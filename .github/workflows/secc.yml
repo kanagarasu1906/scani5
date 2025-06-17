@@ -1,0 +1,56 @@
+name: Universal Snyk Scan Workflow
+
+on:
+  push:
+
+jobs:
+  snyk-security-scan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write  # Required for SARIF upload
+      actions: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (if needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Set up Python (if needed)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Run Snyk test and generate JSON report
+        run: snyk test --all-projects --json > snyk-report.json
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Show vulnerability summary
+        run: |
+          HIGH=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-report.json)
+          MEDIUM=$(jq '[.vulnerabilities[] | select(.severity=="medium")] | length' snyk-report.json)
+          LOW=$(jq '[.vulnerabilities[] | select(.severity=="low")] | length' snyk-report.json)
+          echo "🔒 Snyk Vulnerability Summary:"
+          echo "🟥 High: $HIGH"
+          echo "🟧 Medium: $MEDIUM"
+          echo "🟨 Low: $LOW"
+
+      - name: Upload Snyk report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-report-json
+          path: snyk-report.json
+
+      - name: Monitor all projects in Snyk dashboard
+        run: snyk monitor --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
