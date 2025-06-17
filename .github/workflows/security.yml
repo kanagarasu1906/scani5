@@ -18,14 +18,14 @@ jobs:
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-        working-directory: ./mern/frontend
+        working-directory: ./frontend
 
       - name: Install Snyk CLI
         run: npm install -g snyk
 
       - name: Run Snyk test and generate JSON report
         run: snyk test --json > snyk-report.json
-        working-directory: ./mern/frontend
+        working-directory: ./frontend
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -43,6 +43,6 @@ jobs:
 
       - name: Monitor project in Snyk dashboard
         run: snyk monitor
-        working-directory: ./mern/frontend
+        working-directory: ./frontend
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
