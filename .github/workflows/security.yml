@@ -1,6 +1,6 @@
 name: Example workflow for Node using Snyk
 
-on: 
+on:
   push:
 
 jobs:
@@ -13,14 +13,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'  # or your required version
+          node-version: '18'  # or your preferred version
 
       - name: Install dependencies
         run: npm install
 
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@v1  # Corrected action
+        uses: snyk/actions/node@master  # Use @master if no version tag exists
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: test  # You can use `monitor` or `test`
