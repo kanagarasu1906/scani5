@@ -18,13 +18,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-
+        working-directory: ./frontend   # 👉 adjust to match your project
 
       - name: Install Snyk CLI
         run: npm install -g snyk
 
       - name: Run Snyk test
         run: snyk test
-        working-directory: ./frontend
+        working-directory: ./frontend   # 👉 adjust to match your project
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
