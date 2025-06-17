@@ -1,11 +1,26 @@
 name: Example workflow for Node using Snyk
-on: push
+
+on: 
+  push:
+
 jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # or your required version
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
+        uses: snyk/actions/node@v1  # Corrected action
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test  # You can use `monitor` or `test`
