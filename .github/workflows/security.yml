@@ -18,13 +18,31 @@ jobs:
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-        working-directory: ./frontend   # 👉 adjust to match your project
+        working-directory: ./mern/frontend
 
       - name: Install Snyk CLI
         run: npm install -g snyk
 
-      - name: Run Snyk test
-        run: snyk test
-        working-directory: ./frontend   # 👉 adjust to match your project
+      - name: Run Snyk test and generate JSON report
+        run: snyk test --json > snyk-report.json
+        working-directory: ./mern/frontend
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Show summary of vulnerabilities by severity
+        run: |
+          cd ./mern/frontend
+          HIGH=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-report.json)
+          MEDIUM=$(jq '[.vulnerabilities[] | select(.severity=="medium")] | length' snyk-report.json)
+          LOW=$(jq '[.vulnerabilities[] | select(.severity=="low")] | length' snyk-report.json)
+          echo "🔒 Snyk Vulnerability Summary:"
+          echo "🟥 High: $HIGH"
+          echo "🟧 Medium: $MEDIUM"
+          echo "🟨 Low: $LOW"
+        shell: bash
+
+      - name: Monitor project in Snyk dashboard
+        run: snyk monitor
+        working-directory: ./mern/frontend
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
