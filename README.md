@@ -1,5 +1,5 @@
 
-# 🚀 Laravel + React Monolithic Application (Dockerized)
+# 🚀 Laravel + React Monolithic Application (Dockerized).
 
 This project is a full-stack monolithic application built using **Laravel** (backend) and **React** (frontend), fully containerized with **Docker** for development and production environments.
 
