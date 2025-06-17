@@ -7,18 +7,22 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'  # or your preferred version
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./frontend  # update this path
 
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master  # Use @master if no version tag exists
+      - name: Run Snyk Test
+        uses: snyk/actions/node@master
+        with:
+          command: test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        working-directory: ./frontend  # update this path
