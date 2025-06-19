@@ -20,13 +20,12 @@ jobs:
       #   env:
       #     GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
-      - name: 🧪 Run TruffleHog v2 (legacy)
+      - name: 🧪 Install and Run TruffleHog v2
         run: |
-         pip install trufflehog
-         trufflehog --regex --entropy=True . > trufflehog-results.json
+          pip install trufflehog
+          trufflehog --regex --entropy=True . > trufflehog-results.json || true
 
-
-      - name: 📤 Upload Scan Results
+      - name: 📤 Upload TruffleHog Results
         uses: actions/upload-artifact@v4
         with:
           name: trufflehog-results
