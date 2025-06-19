@@ -14,22 +14,24 @@ jobs:
       - name: 🔄 Checkout code
         uses: actions/checkout@v4
 
-      # Optional: Gitleaks secret scanning (commented out)
-      # - name: 🔐 Secret Scan with Gitleaks
-      #   uses: gitleaks/gitleaks-action@v2
-      #   env:
-      #     GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-      - name: 🧪 Install and Run TruffleHog v2
+      - name: 🧪 Install TruffleHog v2
+        run: pip install trufflehog
+
+      - name: 🔍 Run TruffleHog on selected folders only
         run: |
-          pip install trufflehog
-          trufflehog --regex --entropy=True . > trufflehog-results.json || true
+          mkdir -p scan-results
+          trufflehog --regex --entropy=True ./src > scan-results/trufflehog-src.json || true
+          trufflehog --regex --entropy=True ./config > scan-results/trufflehog-config.json || true
 
       - name: 📤 Upload TruffleHog Results
         uses: actions/upload-artifact@v4
         with:
-          name: trufflehog-results
-          path: .
+         name: trufflehog-results
+         path: scan-results/
+
 
 
       - name: 🛡️ Vulnerability Scan with Trivy
