@@ -21,7 +21,7 @@ jobs:
       #     GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
       - name: 🔐 Secret Scan with TruffleHog
-        uses: trufflesecurity/trufflehog@master
+        uses: trufflesecurity/trufflehog@v1
         with:
           scanArguments: --path . --json > trufflehog-results.json
 
