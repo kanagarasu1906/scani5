@@ -20,10 +20,12 @@ jobs:
       #   env:
       #     GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
-      - name: 🔐 Secret Scan with TruffleHog
-        uses: trufflesecurity/trufflehog@v3.67.3
+      - name: 🔐 TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@master
         with:
-          scanArguments: --path . --json > trufflehog-results.json
+         path: .
+         extra_args: --json > trufflehog-results.json
+
 
 
       - name: 🛡️ Vulnerability Scan with Trivy
