@@ -20,11 +20,10 @@ jobs:
       #   env:
       #     GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
-      - name: 🔐 TruffleHog Secret Scan
-        uses: trufflesecurity/trufflehog@v3.68.3
-        with:
-         path: .
-         extra_args: --json > trufflehog-results.json
+      - name: Run TruffleHog manually
+        run: |
+          pip install trufflehog
+          trufflehog filesystem --path . --json > trufflehog-results.json
 
 
 
