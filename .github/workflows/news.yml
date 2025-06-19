@@ -1,0 +1,44 @@
+name: Code Scan
+
+on:
+ push:
+    branches: [ "master" ]  
+ pull_request:
+    branches: [ "master"  ]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
+
+      # Optional: Gitleaks secret scanning (commented out)
+      # - name: 🔐 Secret Scan with Gitleaks
+      #   uses: gitleaks/gitleaks-action@v2
+      #   env:
+      #     GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+      - name: 🔐 Secret Scan with TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: .
+          output: trufflehog-results.json
+
+      - name: 🛡️ Vulnerability Scan with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+
+      - name: 📊 Code Quality Scan with SonarCloud
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
+        with:
+          args: >
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORG }}
+            -Dsonar.host.url=https://sonarcloud.io
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
